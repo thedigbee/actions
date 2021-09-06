@@ -1,0 +1,27 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.CI_REPO }}
+
+      # Needed to install dependencies used later by TriPSs/conventional-changelog-action@v3
+      - run: npm ci
+
+      - name: Bump version and push tag
+        uses: TriPSs/conventional-changelog-action@v3.7.1
+        with:
+          github-token: ${{ secrets.CI_REPO }}
+          config-file-path: ./conventional-changelog.config.js
+          git-message: "ci(release): {version} [skip ci]"
+          release-count: 0
+          version-file: package.json,package-lock.json
+          skip-on-empty: false

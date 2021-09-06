@@ -1,0 +1,105 @@
+name: publish-image
+
+description: |
+  1. Build & publish the Docker image of a Digbee service to the Github's Docker registry.
+  2. Recreate and restart the Docker service for the new image to take effect.
+
+inputs:
+  github-token:
+    description: Github Token
+    required: true
+
+  ssh-server:
+    description: SSH server IP where docker-compose is running
+    required: true
+
+  ssh-user:
+    description: SSH username
+    required: true
+
+  ssh-key:
+    description: SSH private key
+    required: true
+
+  ssh-command-timeout:
+    description: Timeout for SSH command (see https://github.com/appleboy/ssh-action)
+    default: 10m
+
+  docker-service-name:
+    description: |
+      Name of the Docker service to be restarted so that it takes into account the new image.
+      Use '%s' as a placeholder for the name of the repository
+    required: true
+    default: digbee-%s
+
+  docker-compose-path:
+    description: Path to the docker-compose.yml file. Support multiple paths via comma-separation.
+    required: true
+    default: docker-compose.yml
+
+runs:
+  using: composite
+  steps:
+    - name: Check out the repo
+      uses: actions/checkout@v2
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ inputs.github-token }}
+
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v3
+      with:
+        images: |
+          ghcr.io/${{ github.repository }}
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=semver,pattern={{major}}.{{minor}}.{{patch}}
+          type=sha
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+
+    - name: Execute commands on SSH host
+      uses: appleboy/ssh-action@master
+      with:
+        HOST: ${{ inputs.ssh-server }}
+        USERNAME: ${{ inputs.ssh-user }}
+        KEY: ${{ inputs.ssh-key }}
+        command_timeout: ${{ inputs.ssh-command-timeout }}
+        script: |
+          # https://stackoverflow.com/questions/58033366/how-to-get-current-branch-within-github-actions/58034787
+          BRANCH_NAME="${GITHUB_REF#refs/*/}"
+          REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')
+
+          # Determine Docker service name by resolving the placeholder
+          PLACEHOLDER="%s"
+          SERVICE_NAME=$(echo "${{ inputs.docker-service-name }}" | sed "s/$PLACEHOLDER/$REPOSITORY_NAME/g")
+
+          # Split docker-compose file paths by comma
+          readarray -td, FILE_PATHS <<<"${{ input.docker-compose-path }}"; declare -p FILE_PATHS;
+
+          # Concat all file paths as a single argument to docker-compose
+          FILE_ARG=""
+          for element in "${FILE_PATHS[@]}"
+          do
+            TRIMMED_PATH=$(echo "$element" | xargs)
+            FILE_ARG="$FILE_ARG -f $TRIMMED_PATH"
+          done
+
+          # Pull image
+          sudo docker pull ghcr.io/${{github.repository_owner}}/$REPOSITORY_NAME:$BRANCH_NAME
+
+          # Recreate service container
+          COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+            sudo docker-compose $FILE_ARG up --force-recreate -d --remove-orphans $SERVICE_NAME

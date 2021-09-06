@@ -1,0 +1,19 @@
+name: Prerelease
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  prerelease:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+
+      - uses: ./node-nvmrc
+
+      - uses: ./bump-prerelease
+        with:
+          tag-commit: true
