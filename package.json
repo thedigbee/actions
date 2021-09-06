@@ -1,0 +1,29 @@
+{
+  "name": "actions",
+  "version": "0.0.0",
+  "description": "Github actions repo for the Digbee ecosystem",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thedigbee/actions.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thedigbee/actions/issues"
+  },
+  "homepage": "https://github.com/thedigbee/actions#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^13.1.0",
+    "@commitlint/config-conventional": "^13.1.0",
+    "conventional-changelog-conventionalcommits": "^4.6.0",
+    "husky": "^7.0.2"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  }
+}

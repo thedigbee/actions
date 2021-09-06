@@ -1,0 +1,35 @@
+on:
+  push:
+    branches:
+      - develop
+      - main
+      - master
+
+jobs:
+  build_and_publish_docker_image:
+    name: Build & push Docker image for Digbee service and restart its Docker container
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - if: github.ref == 'refs/heads/develop'
+        name: Staging run (develop)
+        uses: thedigbee/actions/publish-image@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          ssh-server: ${{ secrets.SSH_STAGING_ACCESS_IP }}
+          ssh-user: ${{ secrets.SSH_STAGING_ACCESS_USER }}
+          ssh-key: ${{ secrets.SSH_STAGING_ACCESS_PRIVATE_KEY }}
+          docker-compose-file: docker-compose.staging.yml
+
+      - if: github.ref != 'refs/heads/develop'
+        name: Production run (main/master)
+        uses: thedigbee/actions/publish-image@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          ssh-server: ${{ secrets.SSH_PRODUCTION_ACCESS_IP }}
+          ssh-user: ${{ secrets.SSH_PRODUCTION_ACCESS_USER }}
+          ssh-key: ${{ secrets.SSH_PRODUCTION_ACCESS_PRIVATE_KEY }}
+          docker-compose-file: docker-compose.production.yml
