@@ -13,12 +13,12 @@ jobs:
           ref: ${{ github.head_ref }}
 
       - id: should-skip-step
-        uses: thedigbee/actions/should-skip@v0.0.1-beta-feat-should-skip-and-prerelease.4
+        uses: ./should-skip
 
       - if: steps.should-skip-step.outputs.skip == 'false'
-        uses: thedigbee/actions/node-nvmrc@v0.0.1-beta-feat-should-skip-and-prerelease.4
+        uses: ./node-nvmrc
 
       - if: steps.should-skip-step.outputs.skip == 'false'
-        uses: thedigbee/actions/bump-prerelease@v0.0.1-beta-feat-should-skip-and-prerelease.4
+        uses: ./bump-prerelease
         with:
           tag-commit: true
