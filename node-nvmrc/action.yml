@@ -1,6 +1,6 @@
 name: node-nvmrc
 
-description: Wrapper around actions/setup-node@v2 to use version from .nvmrc
+description: Wrapper around actions/setup-node@v2 to use version from .nvmrc. Adapted from https://github.com/actions/setup-node/issues/32#issuecomment-525791142
 
 outputs:
   version:
