@@ -22,7 +22,7 @@ jobs:
       - run: npm ci
 
       - name: Bump version and push tag
-        uses: TriPSs/conventional-changelog-action@v3
+        uses: TriPSs/conventional-changelog-action@v3.7.1
         with:
           github-token: ${{ secrets.CIDIGBEE_PUBLISH_TOKEN }}
           config-file-path: ./conventional-changelog.config.js
