@@ -1,0 +1,30 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      # To avoid triggering action in circles
+      - package.json
+      - package-lock.json
+      - CHANGELOG.md
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Bump version and push tag
+        uses: TriPSs/conventional-changelog-action@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          config-file-path: ./conventional-changelog.config.js
+          git-message: "ci(release): {version}"
+          tag-prefix: ""
+          release-count: 0
+          version-file: package.json,package-lock.json
+          skip-on-empty: false
