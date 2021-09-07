@@ -1,0 +1,31 @@
+name: sanitize
+
+description: Replaces non-alphanumeric characters with "-" and lowercases entire string
+
+inputs:
+  value:
+    description: String to be sanitized
+    required: true
+    default: ${{ github.head_ref }}
+
+outputs:
+  sanitized:
+    description: Sanitized value (only lowercased alphanumeric characters plus "-")
+    value: ${{ steps.sanitize-step.outputs.sanitized-value }}
+
+runs:
+  using: composite
+  steps:
+    - id: sanitize-step
+      shell: bash
+      run: |
+        SANITIZED_VALUE="${{ inputs.value }}"
+
+        # sanitization
+        SANITIZED_VALUE=$(sed -E 's/[^[:alnum:]]+/-/g' <<<"$SANITIZED_VALUE")
+
+        # to lowercase
+        # https://stackoverflow.com/a/4581564
+        SANITIZED_VALUE=$(sed -e 's/\(.*\)/\L\1/' <<<"$SANITIZED_VALUE")
+
+        echo "::set-output name=sanitized-value::$(echo "$SANITIZED_VALUE")"

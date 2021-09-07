@@ -29,9 +29,9 @@ runs:
         echo "Number of occurrences of '$SKIP_KEYWORD' in last commit message: $SKIP_COUNT"
 
         if [[ "$SKIP_COUNT" -eq 0 ]]; then
-          echo "'$SKIP_KEYWORD' not found, should skip? Yes"
+          echo "'$SKIP_KEYWORD' not found, should skip? No"
           echo "::set-output name=should-skip::false"
         else
-          echo "'$SKIP_KEYWORD' found, should skip? No"
+          echo "'$SKIP_KEYWORD' found, should skip? Yes"
           echo "::set-output name=should-skip::true"
         fi
