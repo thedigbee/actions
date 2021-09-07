@@ -20,3 +20,5 @@ jobs:
 
       - if: steps.should-skip-step.outputs.skip == 'false'
         uses: ./bump-prerelease
+        with:
+          tag-commit: true
