@@ -9,7 +9,7 @@ inputs:
     default: "[skip-ci]"
 
 outputs:
-  should-skip:
+  skip:
     description: "'true' or 'false', depending whether string was found or not"
     value: ${{ steps.should-skip-step.outputs.should-skip }}
 
@@ -27,8 +27,6 @@ runs:
 
         SKIP_COUNT=$(echo "$LAST_COMMIT_MESSAGE" | grep -c -F "$SKIP_KEYWORD") || true
         echo "Number of occurrences of '$SKIP_KEYWORD' in last commit message: $SKIP_COUNT"
-
-        echo "::set-output name=should-skip::false"
 
         if [[ "$SKIP_COUNT" -eq 0 ]]; then
           echo "'$SKIP_KEYWORD' not found, should skip? Yes"

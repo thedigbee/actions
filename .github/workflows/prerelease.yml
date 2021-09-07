@@ -12,30 +12,31 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      - uses: ./should-skip
+      - id: should-skip
+        uses: ./should-skip
 
-      - if: env.DO_PRERELEASE == 'true'
+      - if: ${{ steps.should-skip.outputs.skip }} == 'true'
         uses: actions/setup-node@v2
         with:
           node-version: 14.17.3
           registry-url: https://npm.pkg.github.com
           scope: thedigbee
 
-      - if: env.DO_PRERELEASE == 'true'
+      - if: ${{ steps.should-skip.outputs.skip }} == 'true'
         run: npm ci
 
-      - if: env.DO_PRERELEASE == 'true'
+      - if: ${{ steps.should-skip.outputs.skip }} == 'true'
         run: npm run lint
 
-      - if: env.DO_PRERELEASE == 'true'
+      - if: ${{ steps.should-skip.outputs.skip }} == 'true'
         run: npm run test
 
-      - if: env.DO_PRERELEASE == 'true'
+      - if: ${{ steps.should-skip.outputs.skip }} == 'true'
         name: Sanitize branch name
         run: |
           echo "BRANCH_NAME=$(sed -E 's/[^[:alnum:]]+/-/g' <<<"${{ github.head_ref }}")" >> $GITHUB_ENV
 
-      - if: env.DO_PRERELEASE == 'true'
+      - if: ${{ steps.should-skip.outputs.skip }} == 'true'
         name: Version prerelease and commit it.
         run: |
           VERSION=$(npm version --no-git-tag-version prerelease --preid=beta-"${{ env.BRANCH_NAME }}")
@@ -44,10 +45,10 @@ jobs:
           git commit -am "ci(prerelease): $VERSION"
           git push origin "${{ github.head_ref }}"
 
-      - if: env.DO_PRERELEASE == 'true'
+      - if: ${{ steps.should-skip.outputs.skip }} == 'true'
         run: npm run build
 
-      - if: env.DO_PRERELEASE == 'true'
+      - if: ${{ steps.should-skip.outputs.skip }} == 'true'
         name: Publishes prerelease
         run: |
           echo "Prerelease tag is: 'next-${{ env.BRANCH_NAME }}'"
