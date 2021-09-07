@@ -16,11 +16,7 @@ jobs:
         uses: ./should-skip
 
       - if: steps.should-skip-step.outputs.skip == 'false'
-        id: bump-prerelease-step
-        uses: ./bump-prerelease
+        uses: ./node-nvmrc
 
       - if: steps.should-skip-step.outputs.skip == 'false'
-        name: Publishes prerelease
-        run: |
-          echo "Prerelease tag is: 'next-${{ steps.bump-prerelease-step.outputs.branch-name }}'"
-          # npm publish ./build --tag "next-${{ steps.bump-prerelease-step.outputs.branch-name }}"
+        uses: ./bump-prerelease

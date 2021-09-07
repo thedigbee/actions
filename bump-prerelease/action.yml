@@ -1,6 +1,6 @@
 name: bump-prerelease
 
-description: Bumps prerelease version
+description: Bumps prerelease version. Requires "npm" to be in the path (use after actions/setup-node@v2 or thedigbee/actions/node-nvmrc)
 
 inputs:
   author-name:
@@ -34,12 +34,6 @@ runs:
       uses: ./sanitize
       with:
         value: ${{ github.head_ref }}
-
-    - uses: actions/setup-node@v2
-      with:
-        node-version: 14.17.3
-        registry-url: https://npm.pkg.github.com
-        scope: thedigbee
 
     - id: versioning-step
       shell: bash
