@@ -38,14 +38,25 @@ runs:
     - id: versioning-step
       shell: bash
       run: |
-        TAG_PARAM=$([ "${{ inputs.tag-commit }}" == "true" ] && echo "" || echo "--no-git-tag-version")
         PRERELEASE_ID="${{ inputs.prerelease-id }}-${{ steps.sanitize-step.outputs.sanitized }}"
-        VERSION=$(npm version "$TAG_PARAM" prerelease --preid="$PRERELEASE_ID")
 
-        git config user.name ${{ inputs.author-name }}
-        git config user.email ${{ inputs.author-email }}
-        git commit -am "ci(prerelease): $VERSION"
+        PLACEHOLDER="%s"
+        COMMIT_MESSAGE_TEMPLATE="ci(prerelease): $PLACEHOLDER"
 
-        git push origin "${{ github.head_ref }}"
+        git config user.name "${{ inputs.author-name }}"
+        git config user.email "${{ inputs.author-email }}"
+
+        if [[ "${{ inputs.tag-commit }}" == "true" ]]; then
+          VERSION=$(npm version prerelease --preid="$PRERELEASE_ID" -m "$COMMIT_MESSAGE_TEMPLATE")
+        else
+          VERSION=$(npm version prerelease --preid="$PRERELEASE_ID" -m "$COMMIT_MESSAGE_TEMPLATE" --no-git-tag-version)
+
+          # strips first character "v" of $VERSION
+          VERSION=${VERSION:1}
+
+          git commit -am $(echo $COMMIT_MESSAGE_TEMPLATE | sed "s/$PLACEHOLDER/$VERSION/g")
+        fi
+
+        git push --tags origin "${{ github.head_ref }}"
 
         echo "::set-output name=version::$VERSION"
