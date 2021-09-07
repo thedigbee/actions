@@ -18,6 +18,9 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
+      # Needed to install dependencies used later by TriPSs/conventional-changelog-action@v3
+      - run: npm ci
+
       - name: Bump version and push tag
         uses: TriPSs/conventional-changelog-action@v3
         with:
