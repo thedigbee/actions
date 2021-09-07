@@ -10,7 +10,7 @@ inputs:
   author-email:
     description: Email of the author of the bump commit
     required: true
-    default: ci@digbee.com
+    default: ci@thedigbee.com
   prerelease-id:
     description: Prelease identifier (https://docs.npmjs.com/cli/v7/commands/npm-version#preid)
     default: beta
