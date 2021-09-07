@@ -1,0 +1,62 @@
+name: bump-prerelease
+
+description: Bumps prerelease version. Requires "npm" to be in the path (use after actions/setup-node@v2 or thedigbee/actions/node-nvmrc)
+
+inputs:
+  author-name:
+    description: Name of the author of the bump commit
+    required: true
+    default: cidigbee
+  author-email:
+    description: Email of the author of the bump commit
+    required: true
+    default: ci@thedigbee.com
+  prerelease-id:
+    description: Prelease identifier (https://docs.npmjs.com/cli/v7/commands/npm-version#preid)
+    default: beta
+  tag-commit:
+    description: If enabled, tags the commit with the prerelease version
+    default: false
+
+outputs:
+  branch-name:
+    description: Sanitized branch name
+    value: ${{ steps.sanitize-step.outputs.sanitized }}
+
+  version:
+    description: Prerelease version
+    value: ${{ steps.versioning-step.outputs.version }}
+
+runs:
+  using: composite
+  steps:
+    - id: sanitize-step
+      uses: ./sanitize
+      with:
+        value: ${{ github.head_ref }}
+
+    - id: versioning-step
+      shell: bash
+      run: |
+        PRERELEASE_ID="${{ inputs.prerelease-id }}-${{ steps.sanitize-step.outputs.sanitized }}"
+
+        PLACEHOLDER="%s"
+        COMMIT_MESSAGE_TEMPLATE="ci(prerelease): $PLACEHOLDER"
+
+        git config user.name "${{ inputs.author-name }}"
+        git config user.email "${{ inputs.author-email }}"
+
+        if [[ "${{ inputs.tag-commit }}" == "true" ]]; then
+          VERSION=$(npm version prerelease --preid="$PRERELEASE_ID" -m "$COMMIT_MESSAGE_TEMPLATE")
+        else
+          VERSION=$(npm version prerelease --preid="$PRERELEASE_ID" -m "$COMMIT_MESSAGE_TEMPLATE" --no-git-tag-version)
+
+          # strips first character "v" of $VERSION
+          VERSION=${VERSION:1}
+
+          git commit -am $(echo $COMMIT_MESSAGE_TEMPLATE | sed "s/$PLACEHOLDER/$VERSION/g")
+        fi
+
+        git push --tags origin "${{ github.head_ref }}"
+
+        echo "::set-output name=version::$VERSION"

@@ -1,0 +1,24 @@
+name: Prerelease
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  prerelease:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+
+      - id: should-skip-step
+        uses: ./should-skip
+
+      - if: steps.should-skip-step.outputs.skip == 'false'
+        uses: ./node-nvmrc
+
+      - if: steps.should-skip-step.outputs.skip == 'false'
+        uses: ./bump-prerelease
+        with:
+          tag-commit: true

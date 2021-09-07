@@ -1,0 +1,37 @@
+name: should-skip
+
+description: Returns a boolean based on whether it finds the provided string (defaults to "[skip-ci]") in the latest commit message.
+
+inputs:
+  skip-keyword:
+    description: Keyword to search for in commit message. Defaults to "[skip-ci]"
+    required: true
+    default: "[skip-ci]"
+
+outputs:
+  skip:
+    description: "'true' or 'false', depending whether string was found or not"
+    value: ${{ steps.should-skip-step.outputs.should-skip }}
+
+runs:
+  using: composite
+  steps:
+    - id: should-skip-step
+      shell: bash
+      # adapted from: https://github.com/marketplace/actions/skip-based-on-commit-message#just-use-bash
+      run: |
+        SKIP_KEYWORD=${{ inputs.skip-keyword }}
+
+        LAST_COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")
+        echo "Last commit message: $LAST_COMMIT_MESSAGE"
+
+        SKIP_COUNT=$(echo "$LAST_COMMIT_MESSAGE" | grep -c -F "$SKIP_KEYWORD") || true
+        echo "Number of occurrences of '$SKIP_KEYWORD' in last commit message: $SKIP_COUNT"
+
+        if [[ "$SKIP_COUNT" -eq 0 ]]; then
+          echo "'$SKIP_KEYWORD' not found, should skip? No"
+          echo "::set-output name=should-skip::false"
+        else
+          echo "'$SKIP_KEYWORD' found, should skip? Yes"
+          echo "::set-output name=should-skip::true"
+        fi

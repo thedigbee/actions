@@ -1,9 +1,8 @@
-name: Build/publish Docker image & rebuild/restart service
+name: publish-image
 
 description: |
-  Github Action used to accomplish two things
-   1. Build & publish the Docker image of a Digbee service to the Github's Docker registry.
-   2. Rebuild and restart the service container to use the new image.
+  1. Build & publish the Docker image of a Digbee service to the Github's Docker registry.
+  2. Rebuild and restart the service container to use the new image.
 
 inputs:
   github-token:
