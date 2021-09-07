@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: ${{ github.head_ref }}
+          token: ${{ secrets.CIDIGBEE_PUBLISH_TOKEN }}
 
       # Needed to install dependencies used later by TriPSs/conventional-changelog-action@v3
       - run: npm ci
