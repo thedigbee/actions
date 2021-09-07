@@ -24,7 +24,7 @@ jobs:
       - name: Bump version and push tag
         uses: TriPSs/conventional-changelog-action@v3
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.CIDIGBEE_PUSH_TOKEN }}
           config-file-path: ./conventional-changelog.config.js
           git-message: "ci(release): {version}"
           release-count: 0
