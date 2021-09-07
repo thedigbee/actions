@@ -1,0 +1,57 @@
+name: bump-prerelease
+
+description: Bumps prerelease version
+
+inputs:
+  author-name:
+    description: Name of the author of the bump commit
+    required: true
+    default: cidigbee
+  author-email:
+    description: Email of the author of the bump commit
+    required: true
+    default: ci@digbee.com
+  prerelease-id:
+    description: Prelease identifier (https://docs.npmjs.com/cli/v7/commands/npm-version#preid)
+    default: beta
+  tag-commit:
+    description: If enabled, tags the commit with the prerelease version
+    default: false
+
+outputs:
+  branch-name:
+    description: Sanitized branch name
+    value: ${{ steps.sanitize-step.outputs.sanitized }}
+
+  version:
+    description: Prerelease version
+    value: ${{ steps.versioning-step.outputs.version }}
+
+runs:
+  using: composite
+  steps:
+    - id: sanitize-step
+      uses: ./sanitize
+      with:
+        value: ${{ github.head_ref }}
+
+    - uses: actions/setup-node@v2
+      with:
+        node-version: 14.17.3
+        registry-url: https://npm.pkg.github.com
+        scope: thedigbee
+
+    - id: versioning-step
+      shell: bash
+      run: |
+        TAG_PARAM=$([ "${{ inputs.tag-commit }}" == "true" ] && echo "" || echo "--no-git-tag-version")
+        PRERELEASE_ID="${{ inputs.prerelease-id }}-${{ steps.sanitize-step.outputs.sanitized }}"
+        VERSION=$(npm version "$TAG_PARAM" prerelease --preid="$PRERELEASE_ID")
+
+        git config user.name ${{ inputs.author-name }}
+        git config user.email ${{ inputs.author-email }}
+        git commit -am "ci(prerelease): $VERSION"
+
+        git push origin "${{ github.head_ref }}"
+
+        echo "::set-output name=version::$VERSION"

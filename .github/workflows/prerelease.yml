@@ -16,29 +16,11 @@ jobs:
         uses: ./should-skip
 
       - if: steps.should-skip-step.outputs.skip == 'false'
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14.17.3
-          registry-url: https://npm.pkg.github.com
-          scope: thedigbee
-
-      - #if: steps.should-skip-step.outputs.skip == 'false'
-        id: sanitize-step
-        uses: ./sanitize
-        with:
-          value: ${{ github.head_ref }}
-
-      - if: steps.should-skip-step.outputs.skip == 'false'
-        name: Version prerelease and commit it.
-        run: |
-          VERSION=$(npm version --no-git-tag-version prerelease --preid=beta-"${{ steps.sanitize-step.outputs.sanitized }}")
-          git config --global user.name 'cidigbee'
-          git config --global user.email 'ci@thedigbee.com'
-          git commit -am "ci(prerelease): $VERSION"
-          git push origin "${{ github.head_ref }}"
+        id: bump-prerelease-step
+        uses: ./bump-prerelease
 
       - if: steps.should-skip-step.outputs.skip == 'false'
         name: Publishes prerelease
         run: |
-          echo "Prerelease tag is: 'next-${{ steps.sanitize-step.outputs.sanitized }}'"
-          # npm publish ./build --tag "next-${{ steps.sanitize-step.outputs.sanitized }}"
+          echo "Prerelease tag is: 'next-${{ steps.bump-prerelease-step.outputs.branch-name }}'"
+          # npm publish ./build --tag "next-${{ steps.bump-prerelease-step.outputs.branch-name }}"

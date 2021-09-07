@@ -1,4 +1,4 @@
-name: Build/publish Docker image & rebuild/restart service
+name: publish-image
 
 description: |
   1. Build & publish the Docker image of a Digbee service to the Github's Docker registry.
