@@ -1,3 +1,10 @@
+### [0.1.5](https://github.com/thedigbee/actions/compare/v0.1.4...v0.1.5) (2021-09-08)
+
+
+### Bug Fixes
+
+* revert author-name ([c547fd2](https://github.com/thedigbee/actions/commit/c547fd2e81ffb90e36716e2973423db73cebd129))
+
 ### [0.1.4](https://github.com/thedigbee/actions/compare/v0.1.3...v0.1.4) (2021-09-08)
 
 

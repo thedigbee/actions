@@ -1,6 +1,6 @@
 {
   "name": "actions",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Github actions repo for the Digbee ecosystem",
   "main": "index.js",
   "scripts": {
