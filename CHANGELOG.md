@@ -1,3 +1,10 @@
+### [0.1.4](https://github.com/thedigbee/actions/compare/v0.1.3...v0.1.4) (2021-09-08)
+
+
+### Bug Fixes
+
+* change default author-name ([ce17c54](https://github.com/thedigbee/actions/commit/ce17c5461386bd2c5dab395765a0a3855956d8d1))
+
 ### [0.1.3](https://github.com/thedigbee/actions/compare/v0.1.2-beta-testing.1...v0.1.3) (2021-09-08)
 
 ### [0.1.2-beta-testing.1](https://github.com/thedigbee/actions/compare/v0.1.2-beta-testing.0...v0.1.2-beta-testing.1) (2021-09-08)
