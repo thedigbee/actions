@@ -1,3 +1,20 @@
+### [0.1.3](https://github.com/thedigbee/actions/compare/v0.1.2-beta-testing.1...v0.1.3) (2021-09-08)
+
+### [0.1.2-beta-testing.1](https://github.com/thedigbee/actions/compare/v0.1.2-beta-testing.0...v0.1.2-beta-testing.1) (2021-09-08)
+
+
+### Bug Fixes
+
+* test merge to master ([52ba67c](https://github.com/thedigbee/actions/commit/52ba67cb72155174bd1285a56b3e029d60b6fb3b))
+* test skipping [skip ci] ([ad25e6f](https://github.com/thedigbee/actions/commit/ad25e6fd792256316185009bf162fbe97123f5d6))
+
+### [0.1.2-beta-testing.0](https://github.com/thedigbee/actions/compare/v0.1.1...v0.1.2-beta-testing.0) (2021-09-08)
+
+
+### Bug Fixes
+
+* surround with double quotes bump-release author/email defaults ([8ca122a](https://github.com/thedigbee/actions/commit/8ca122a8d5c1e5302030f3884764e79d90c52bdb))
+
 ### [0.1.1](https://github.com/thedigbee/actions/compare/v0.1.0...v0.1.1) (2021-09-08)
 
 
