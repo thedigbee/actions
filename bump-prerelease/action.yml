@@ -10,11 +10,11 @@ inputs:
   author-name:
     description: Name of the author of the bump commit
     required: true
-    default: @thedigbee/actions
+    default: "@thedigbee/actions"
   author-email:
     description: Email of the author of the bump commit
     required: true
-    default: <>
+    default: "<>"
   prerelease-id:
     description: Prerelease identifier (https://docs.npmjs.com/cli/v7/commands/npm-version#preid)
     default: beta
