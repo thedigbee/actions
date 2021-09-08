@@ -6,7 +6,7 @@ Github actions relating to the Digbee ecosystem
 
 First, it builds & publishes the Docker image of a specific service to the Github's Docker registry.
 
-Then, it recreates and restarts the associated Docker container s that the new image takes effect.
+Then, it recreates and restarts the associated Docker container so that the new image takes effect.
 
 ### Example usage in a workflow file
 
