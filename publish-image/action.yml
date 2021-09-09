@@ -33,7 +33,9 @@ inputs:
     default: digbee-%s
 
   docker-compose-path:
-    description: Path to the docker-compose.yml file. Support multiple paths via comma-separation.
+    description: |
+      Path to the docker-compose.yml file. Support multiple paths via comma-separation.
+      DO NOT use the "~" shortcut.
     required: true
     default: docker-compose.yml
 
@@ -42,6 +44,8 @@ runs:
   steps:
     - name: Check out the repo
       uses: actions/checkout@v2
+      with:
+        token: ${{ inputs.github-token }}
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v1
@@ -78,23 +82,27 @@ runs:
         KEY: ${{ inputs.ssh-key }}
         command_timeout: ${{ inputs.ssh-command-timeout }}
         script: |
+          BRANCH_NAME="${{ github.ref }}"
+          REPOSITORY_NAME="${{ github.repository }}"
+
           # https://stackoverflow.com/questions/58033366/how-to-get-current-branch-within-github-actions/58034787
-          BRANCH_NAME="${GITHUB_REF#refs/*/}"
-          REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')
+          BRANCH_NAME="${BRANCH_NAME#refs/*/}"
+          REPOSITORY_NAME=$(echo "$REPOSITORY_NAME" | awk -F / '{print $2}')
 
           # Determine Docker service name by resolving the placeholder
           PLACEHOLDER="%s"
           SERVICE_NAME=$(echo "${{ inputs.docker-service-name }}" | sed "s/$PLACEHOLDER/$REPOSITORY_NAME/g")
 
           # Split docker-compose file paths by comma
-          readarray -td, FILE_PATHS <<<"${{ input.docker-compose-path }}"; declare -p FILE_PATHS;
+          # https://stackoverflow.com/questions/10586153/how-to-split-a-string-into-an-array-in-bash
+          IFS=',' read -r -a FILE_PATHS <<< "${{ inputs.docker-compose-path }}"
 
           # Concat all file paths as a single argument to docker-compose
-          FILE_ARG=""
-          for element in "${FILE_PATHS[@]}"
+          FILE_ARGS=()
+          for element in ${FILE_PATHS[@]}
           do
-            TRIMMED_PATH=$(echo "$element" | xargs)
-            FILE_ARG="$FILE_ARG -f $TRIMMED_PATH"
+            TRIMMED_PATH=$(echo $element | xargs)
+            FILE_ARGS+=(-f $TRIMMED_PATH)
           done
 
           # Pull image
@@ -102,4 +110,4 @@ runs:
 
           # Recreate service container
           COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
-            sudo docker-compose $FILE_ARG up --force-recreate -d --remove-orphans $SERVICE_NAME
+            sudo docker-compose ${FILE_ARGS[@]} up --force-recreate -d --remove-orphans $SERVICE_NAME
