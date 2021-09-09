@@ -1,3 +1,12 @@
+### [0.1.7](https://github.com/thedigbee/actions/compare/v0.1.6-beta-fix-publish-image.0...v0.1.7) (2021-09-09)
+
+### [0.1.6-beta-fix-publish-image.0](https://github.com/thedigbee/actions/compare/v0.1.5...v0.1.6-beta-fix-publish-image.0) (2021-09-09)
+
+
+### Bug Fixes
+
+* publish-image ([e79bd9c](https://github.com/thedigbee/actions/commit/e79bd9cc5e3a4336b312c3464fc89d8134b7537c))
+
 ### [0.1.5](https://github.com/thedigbee/actions/compare/v0.1.4...v0.1.5) (2021-09-08)
 
 
