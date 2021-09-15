@@ -1,3 +1,10 @@
+### [0.1.9](https://github.com/thedigbee/actions/compare/v0.1.8...v0.1.9) (2021-09-15)
+
+
+### Bug Fixes
+
+* output prerelease-tag from bump-prerelease actio ([460a6ea](https://github.com/thedigbee/actions/commit/460a6eae6fc59291f13a054e96902af465660886))
+
 ### [0.1.8](https://github.com/thedigbee/actions/compare/v0.1.7...v0.1.8) (2021-09-15)
 
 
