@@ -35,6 +35,10 @@ outputs:
     description: Prerelease version
     value: ${{ steps.versioning-step.outputs.version }}
 
+  prerelease-tag:
+    description: Prerelease tag, "${prerelease ID}-${sanitizied branch name}"
+    value: ${{ steps.versioning-step.outputs.prerelease-tag }}
+
 runs:
   using: composite
   steps:
@@ -46,7 +50,7 @@ runs:
     - id: versioning-step
       shell: bash
       run: |
-        PRERELEASE_ID="${{ inputs.prerelease-id }}-${{ steps.sanitize-step.outputs.sanitized }}"
+        PRERELEASE_TAG="${{ inputs.prerelease-id }}-${{ steps.sanitize-step.outputs.sanitized }}"
 
         PLACEHOLDER="%s"
         COMMIT_MESSAGE_TEMPLATE="ci(prerelease): $PLACEHOLDER"
@@ -55,9 +59,9 @@ runs:
         git config user.email "${{ inputs.author-email }}"
 
         if [[ "${{ inputs.tag-commit }}" == "true" ]]; then
-          VERSION=$(npm version prerelease --preid="$PRERELEASE_ID" -m "$COMMIT_MESSAGE_TEMPLATE")
+          VERSION=$(npm version prerelease --preid="$PRERELEASE_TAG" -m "$COMMIT_MESSAGE_TEMPLATE")
         else
-          VERSION=$(npm version prerelease --preid="$PRERELEASE_ID" -m "$COMMIT_MESSAGE_TEMPLATE" --no-git-tag-version)
+          VERSION=$(npm version prerelease --preid="$PRERELEASE_TAG" -m "$COMMIT_MESSAGE_TEMPLATE" --no-git-tag-version)
 
           # strips first character "v" of $VERSION
           VERSION=${VERSION:1}
@@ -68,3 +72,4 @@ runs:
         git push --tags origin "${{ inputs.branch_ref }}"
 
         echo "::set-output name=version::$VERSION"
+        echo "::set-output name=prerelease-tag::$PRERELEASE_TAG"
