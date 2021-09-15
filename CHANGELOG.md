@@ -1,3 +1,10 @@
+### [0.1.10](https://github.com/thedigbee/actions/compare/v0.1.9...v0.1.10) (2021-09-15)
+
+
+### Bug Fixes
+
+* absolute reference to sanitize action ([cf29cb4](https://github.com/thedigbee/actions/commit/cf29cb4a1ddac366f7139725ba6a8f387ed1a3ae))
+
 ### [0.1.9](https://github.com/thedigbee/actions/compare/v0.1.8...v0.1.9) (2021-09-15)
 
 
