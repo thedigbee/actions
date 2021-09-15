@@ -21,6 +21,10 @@ inputs:
   tag-commit:
     description: If enabled, tags the commit with the prerelease version
     default: false
+  branch_ref:
+    description: Git branch. Defaults to the value `github.head_ref`
+    required: true
+    default: ${{ github.head_ref }}
 
 outputs:
   branch-name:
@@ -37,7 +41,7 @@ runs:
     - id: sanitize-step
       uses: ./sanitize
       with:
-        value: ${{ github.head_ref }}
+        value: ${{ inputs.branch_ref }}
 
     - id: versioning-step
       shell: bash
@@ -61,6 +65,6 @@ runs:
           git commit -am $(echo $COMMIT_MESSAGE_TEMPLATE | sed "s/$PLACEHOLDER/$VERSION/g")
         fi
 
-        git push --tags origin "${{ github.head_ref }}"
+        git push --tags origin "${{ inputs.branch_ref }}"
 
         echo "::set-output name=version::$VERSION"
