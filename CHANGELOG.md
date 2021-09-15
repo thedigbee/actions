@@ -1,3 +1,10 @@
+### [0.1.11](https://github.com/thedigbee/actions/compare/v0.1.10...v0.1.11) (2021-09-15)
+
+
+### Bug Fixes
+
+* missing double quotes in bump-prerelease action ([7e30481](https://github.com/thedigbee/actions/commit/7e30481e10b2276a5c12c3aca8d7f0d5f91e5468))
+
 ### [0.1.10](https://github.com/thedigbee/actions/compare/v0.1.9...v0.1.10) (2021-09-15)
 
 
