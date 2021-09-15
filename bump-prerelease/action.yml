@@ -66,7 +66,7 @@ runs:
           # strips first character "v" of $VERSION
           VERSION=${VERSION:1}
 
-          git commit -am $(echo $COMMIT_MESSAGE_TEMPLATE | sed "s/$PLACEHOLDER/$VERSION/g")
+          git commit -am "$(echo $COMMIT_MESSAGE_TEMPLATE | sed "s/$PLACEHOLDER/$VERSION/g")"
         fi
 
         git push --tags origin "${{ inputs.branch_ref }}"
