@@ -1,6 +1,6 @@
 {
   "name": "actions",
-  "version": "0.1.7",
+  "version": "0.1.8-beta-test.0",
   "description": "Github actions repo for the Digbee ecosystem",
   "main": "index.js",
   "scripts": {
