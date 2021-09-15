@@ -1,3 +1,10 @@
+### [0.1.8](https://github.com/thedigbee/actions/compare/v0.1.7...v0.1.8) (2021-09-15)
+
+
+### Bug Fixes
+
+* param 'branch-ref' in bump-prerelease action ([02379d9](https://github.com/thedigbee/actions/commit/02379d9d1089d72fa3322fb571a04396ee2b209b))
+
 ### [0.1.7](https://github.com/thedigbee/actions/compare/v0.1.6-beta-fix-publish-image.0...v0.1.7) (2021-09-09)
 
 ### [0.1.6-beta-fix-publish-image.0](https://github.com/thedigbee/actions/compare/v0.1.5...v0.1.6-beta-fix-publish-image.0) (2021-09-09)
