@@ -43,7 +43,7 @@ runs:
   using: composite
   steps:
     - id: sanitize-step
-      uses: ./sanitize
+      uses: thedigbee/actions/sanitize@master
       with:
         value: ${{ inputs.branch_ref }}
 
