@@ -1,6 +1,6 @@
 {
   "name": "actions",
-  "version": "0.1.12-beta-fix-backup-in-publish-image.0",
+  "version": "0.1.13",
   "description": "Github actions repo for the Digbee ecosystem",
   "main": "index.js",
   "scripts": {

@@ -1,3 +1,12 @@
+### [0.1.13](https://github.com/thedigbee/actions/compare/v0.1.12-beta-fix-backup-in-publish-image.0...v0.1.13) (2021-09-24)
+
+### [0.1.12-beta-fix-backup-in-publish-image.0](https://github.com/thedigbee/actions/compare/v0.1.11...v0.1.12-beta-fix-backup-in-publish-image.0) (2021-09-24)
+
+
+### New Features
+
+* add backup db step at the beggining in publish-image action ([2480fcf](https://github.com/thedigbee/actions/commit/2480fcf21566805a64ce73f4b7cee38268ba9126))
+
 ### [0.1.11](https://github.com/thedigbee/actions/compare/v0.1.10...v0.1.11) (2021-09-15)
 
 
