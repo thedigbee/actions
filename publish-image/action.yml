@@ -39,9 +39,26 @@ inputs:
     required: true
     default: docker-compose.yml
 
+  run-db-backup:
+    description: If true, performs a MySQL database backup before running this actions.
+    required: false
+    default: false
+
 runs:
   using: composite
   steps:
+    - name: Backup database
+      uses: appleboy/ssh-action@master
+      with:
+        HOST: ${{ inputs.ssh-server }}
+        USERNAME: ${{ inputs.ssh-user }}
+        KEY: ${{ inputs.ssh-key }}
+        script: |
+          # Performs backup only if enabled
+          if [[ "${{ inputs.run-db-backup }}" == "true" ]]; then
+            /etc/cron.hourly/mysql-s3-backup-script
+          fi;
+
     - name: Check out the repo
       uses: actions/checkout@v2
       with:
