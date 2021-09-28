@@ -1,6 +1,6 @@
 {
   "name": "actions",
-  "version": "0.1.13",
+  "version": "0.1.14-beta-feat-bump-deps.0",
   "description": "Github actions repo for the Digbee ecosystem",
   "main": "index.js",
   "scripts": {
