@@ -1,3 +1,11 @@
+## [0.2.0](https://github.com/thedigbee/actions/compare/v0.1.13...v0.2.0) (2021-09-29)
+
+
+### New Features
+
+* bump deps to prevent security warning ([46566e6](https://github.com/thedigbee/actions/commit/46566e669c4f3032d3bed0e4d0af91ac1793df72))
+* running npm install with npm 7 ([f601b42](https://github.com/thedigbee/actions/commit/f601b42872f6109c67831e89e7a383a8dbc4d770))
+
 ### [0.1.13](https://github.com/thedigbee/actions/compare/v0.1.12-beta-fix-backup-in-publish-image.0...v0.1.13) (2021-09-24)
 
 ### [0.1.12-beta-fix-backup-in-publish-image.0](https://github.com/thedigbee/actions/compare/v0.1.11...v0.1.12-beta-fix-backup-in-publish-image.0) (2021-09-24)
