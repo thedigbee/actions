@@ -1,3 +1,10 @@
+### [0.2.2](https://github.com/thedigbee/actions/compare/v0.2.0...v0.2.2) (2021-10-12)
+
+
+### Bug Fixes
+
+* upgrade deps to remove dep warnings ([36cd85c](https://github.com/thedigbee/actions/commit/36cd85c2b9be12267cc9e95d0ac8fbd7a6f3c4f2))
+
 ## [0.2.0](https://github.com/thedigbee/actions/compare/v0.1.13...v0.2.0) (2021-09-29)
 
 
