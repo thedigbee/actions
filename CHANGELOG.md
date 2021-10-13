@@ -1,3 +1,12 @@
+### [0.2.4](https://github.com/thedigbee/actions/compare/v0.2.3-beta-fix-docker-pull-and-image-build.0...v0.2.4) (2021-10-13)
+
+### [0.2.3-beta-fix-docker-pull-and-image-build.0](https://github.com/thedigbee/actions/compare/v0.2.2...v0.2.3-beta-fix-docker-pull-and-image-build.0) (2021-10-13)
+
+
+### Bug Fixes
+
+* changes to how Docker images are pulled and built ([edc0085](https://github.com/thedigbee/actions/commit/edc0085fe9cfaa4e5edd48db81c8e366f96ce243))
+
 ### [0.2.2](https://github.com/thedigbee/actions/compare/v0.2.0...v0.2.2) (2021-10-12)
 
 
