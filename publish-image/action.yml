@@ -99,11 +99,7 @@ runs:
         KEY: ${{ inputs.ssh-key }}
         command_timeout: ${{ inputs.ssh-command-timeout }}
         script: |
-          BRANCH_NAME="${{ github.ref }}"
           REPOSITORY_NAME="${{ github.repository }}"
-
-          # https://stackoverflow.com/questions/58033366/how-to-get-current-branch-within-github-actions/58034787
-          BRANCH_NAME="${BRANCH_NAME#refs/*/}"
           REPOSITORY_NAME=$(echo "$REPOSITORY_NAME" | awk -F / '{print $2}')
 
           # Determine Docker service name by resolving the placeholder
@@ -123,8 +119,12 @@ runs:
           done
 
           # Pull image
-          sudo docker pull ghcr.io/${{github.repository_owner}}/$REPOSITORY_NAME:$BRANCH_NAME
+          sudo docker-compose ${FILE_ARGS[@]} pull $SERVICE_NAME
 
           # Recreate service container
           COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
-            sudo docker-compose ${FILE_ARGS[@]} up --force-recreate -d --remove-orphans $SERVICE_NAME
+            sudo docker-compose ${FILE_ARGS[@]} up --build --force-recreate -d --remove-orphans $SERVICE_NAME
+
+          # Log image & container state
+          sudo docker container ls
+          sudo docker image ls
