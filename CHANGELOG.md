@@ -1,3 +1,19 @@
+### [0.2.6](https://github.com/thedigbee/actions/compare/v0.2.5-beta-build-add-build-args.1...v0.2.6) (2021-10-20)
+
+### [0.2.5-beta-build-add-build-args.1](https://github.com/thedigbee/actions/compare/v0.2.5-beta-build-add-build-args.0...v0.2.5-beta-build-add-build-args.1) (2021-10-20)
+
+
+### Miscellaneous Chores
+
+* add reference link to docker-build-args comment ([36b00c7](https://github.com/thedigbee/actions/commit/36b00c7792731d398dc0ca13aa9668debc7db6c7))
+
+### [0.2.5-beta-build-add-build-args.0](https://github.com/thedigbee/actions/compare/v0.2.4...v0.2.5-beta-build-add-build-args.0) (2021-10-19)
+
+
+### Build System
+
+* add ability to provide build-args to the image building process ([cd7d67f](https://github.com/thedigbee/actions/commit/cd7d67f807f0b74a7e0e8339896e80d7de25a0d8))
+
 ### [0.2.4](https://github.com/thedigbee/actions/compare/v0.2.3-beta-fix-docker-pull-and-image-build.0...v0.2.4) (2021-10-13)
 
 ### [0.2.3-beta-fix-docker-pull-and-image-build.0](https://github.com/thedigbee/actions/compare/v0.2.2...v0.2.3-beta-fix-docker-pull-and-image-build.0) (2021-10-13)
