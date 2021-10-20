@@ -39,6 +39,10 @@ inputs:
     required: true
     default: docker-compose.yml
 
+  docker-build-args:
+    description: A list of arguments to be used during the image building process, passed down to `docker/build-push-action` (see `build-args` in https://github.com/docker/build-push-action#inputs).
+    required: false
+
   run-db-backup:
     description: If true, performs a MySQL database backup before running this actions.
     required: false
@@ -90,6 +94,7 @@ runs:
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+        build-args: ${{ inputs.docker-build-args }}
 
     - name: Execute commands on SSH host
       uses: appleboy/ssh-action@master
