@@ -1,3 +1,10 @@
+## [0.3.0](https://github.com/thedigbee/actions/compare/v0.2.6...v0.3.0) (2022-04-04)
+
+
+### New Features
+
+* trigger-image-deploy action ([3f4c00a](https://github.com/thedigbee/actions/commit/3f4c00a7a908c30ef661336b2c279859d58535f3))
+
 ### [0.2.6](https://github.com/thedigbee/actions/compare/v0.2.5-beta-build-add-build-args.1...v0.2.6) (2021-10-20)
 
 ### [0.2.5-beta-build-add-build-args.1](https://github.com/thedigbee/actions/compare/v0.2.5-beta-build-add-build-args.0...v0.2.5-beta-build-add-build-args.1) (2021-10-20)
