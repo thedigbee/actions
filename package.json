@@ -1,6 +1,6 @@
 {
   "name": "actions",
-  "version": "0.2.6",
+  "version": "0.2.7-beta-feature-trigger-image-deploy.0",
   "description": "Github actions repo for the Digbee ecosystem",
   "main": "index.js",
   "scripts": {
