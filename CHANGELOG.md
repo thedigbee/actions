@@ -1,3 +1,10 @@
+### [0.3.1](https://github.com/thedigbee/actions/compare/v0.3.0...v0.3.1) (2022-04-04)
+
+
+### Bug Fixes
+
+* normalize trigger-image-deploy definition ([83fa7b2](https://github.com/thedigbee/actions/commit/83fa7b22fae37d99264265316417b4e2d7a428d4))
+
 ## [0.3.0](https://github.com/thedigbee/actions/compare/v0.2.6...v0.3.0) (2022-04-04)
 
 
