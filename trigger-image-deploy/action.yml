@@ -1,0 +1,81 @@
+name: Trigger Image Deploy
+
+inputs:
+  ssh-server:
+    description: SSH server IP where docker-compose is running
+    required: true
+
+  ssh-user:
+    description: SSH username
+    required: true
+
+  ssh-key:
+    description: SSH private key
+    required: true
+
+  ssh-command-timeout:
+    description: Timeout for SSH command (see https://github.com/appleboy/ssh-action)
+    default: 10m
+
+  docker-service-name:
+    description: |
+      Name of the Docker service to be restarted so that it takes into account the new image.
+      Use '%s' as a placeholder for the name of the repository
+    required: true
+    default: digbee-%s
+
+  docker-compose-path:
+    description: |
+      Path to the docker-compose.yml file. Support multiple paths via comma-separation.
+      DO NOT use the "~" shortcut.
+    required: true
+    default: docker-compose.yml
+
+  docker-image-tag:
+    description: "Docker image tag"
+    required: true
+    default: "develop"
+
+jobs:
+  trigger-image-deploy:
+    name: Pulls & deploy Docker image from the GH registry
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Execute commands on SSH host
+        uses: appleboy/ssh-action@master
+        with:
+          HOST: ${{ inputs.ssh-server }}
+          USERNAME: ${{ inputs.ssh-user }}
+          KEY: ${{ inputs.ssh-key }}
+          command_timeout: ${{ inputs.ssh-command-timeout }}
+          script: |
+            REPOSITORY_NAME="${{ github.repository }}"
+            REPOSITORY_NAME=$(echo "$REPOSITORY_NAME" | awk -F / '{print $2}')
+
+            # Determine Docker service name by resolving the placeholder
+            PLACEHOLDER="%s"
+            SERVICE_NAME=$(echo "${{ inputs.docker-service-name }}" | sed "s/$PLACEHOLDER/$REPOSITORY_NAME/g")
+
+            # Split docker-compose file paths by comma
+            # https://stackoverflow.com/questions/10586153/how-to-split-a-string-into-an-array-in-bash
+            IFS=',' read -r -a FILE_PATHS <<< "${{ inputs.docker-compose-path }}"
+
+            # Concat all file paths as a single argument to docker-compose
+            FILE_ARGS=()
+            for element in ${FILE_PATHS[@]}
+            do
+              TRIMMED_PATH=$(echo $element | xargs)
+              FILE_ARGS+=(-f $TRIMMED_PATH)
+            done
+
+            # Pull image
+            sudo docker-compose ${FILE_ARGS[@]} pull $SERVICE_NAME
+
+            # Recreate service container
+            COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+              sudo docker-compose ${FILE_ARGS[@]} up --build --force-recreate -d --remove-orphans $SERVICE_NAME
+
+            # Log image & container state
+            sudo docker container ls
+            sudo docker image ls
