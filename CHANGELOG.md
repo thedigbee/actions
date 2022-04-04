@@ -1,3 +1,10 @@
+## [0.4.0](https://github.com/thedigbee/actions/compare/v0.3.1...v0.4.0) (2022-04-04)
+
+
+### New Features
+
+* support for specifying image tag in trigger-image-deploy ([7c89f03](https://github.com/thedigbee/actions/commit/7c89f03eefe8d257f5069c401878acdf67fdc783))
+
 ### [0.3.1](https://github.com/thedigbee/actions/compare/v0.3.0...v0.3.1) (2022-04-04)
 
 
