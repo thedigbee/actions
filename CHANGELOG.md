@@ -1,3 +1,10 @@
+### [0.4.1](https://github.com/thedigbee/actions/compare/v0.4.0...v0.4.1) (2022-04-04)
+
+
+### Bug Fixes
+
+* docker-image-tag description ([876f490](https://github.com/thedigbee/actions/commit/876f490c5bee38d41d4e78ceb77dd154ef8d7ea0))
+
 ## [0.4.0](https://github.com/thedigbee/actions/compare/v0.3.1...v0.4.0) (2022-04-04)
 
 
