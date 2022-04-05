@@ -101,7 +101,6 @@ runs:
             FILE_ARGS+=(-f $TRIMMED_PATH)
           done
 
-
           if [ $DOCKER_IMAGE_TAG != "" ]; then
             ##### Make sure "yq" package is installed first.
             YQ_PACKAGE=yq
