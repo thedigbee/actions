@@ -1,3 +1,11 @@
+### [0.4.7](https://github.com/thedigbee/actions/compare/v0.4.6...v0.4.7) (2022-04-05)
+
+
+### Bug Fixes
+
+* change approach to trigger-image-deploy (see body) ([e14d024](https://github.com/thedigbee/actions/commit/e14d0246fc9fc56974676b0eabc2331bd4053b63))
+* rename 'docker-compose-override-file-name' to 'docker-compose-path-override' ([29d8b6f](https://github.com/thedigbee/actions/commit/29d8b6fbc0110124ef357e68e4a7a4a8c39b6d39))
+
 ### [0.4.6](https://github.com/thedigbee/actions/compare/v0.4.5...v0.4.6) (2022-04-05)
 
 
