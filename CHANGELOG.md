@@ -1,3 +1,10 @@
+### [0.4.9](https://github.com/thedigbee/actions/compare/v0.4.8...v0.4.9) (2022-04-05)
+
+
+### Bug Fixes
+
+* bad image tag ([7a6d587](https://github.com/thedigbee/actions/commit/7a6d587620a5f1a38675c40b024d829067eb8fd8))
+
 ### [0.4.8](https://github.com/thedigbee/actions/compare/v0.4.7...v0.4.8) (2022-04-05)
 
 
