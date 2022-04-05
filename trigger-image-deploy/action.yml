@@ -70,7 +70,7 @@ runs:
           set -e
 
           ##### Input validation: OVERRIDE_FILE
-          if [ -f "$OVERRIDE_FILE" ]; then
+          if [ ! -f "$OVERRIDE_FILE" ]; then
             echo "'$OVERRIDE_FILE' doesn't exist or is not a file";
             exit 1;
           fi
@@ -82,16 +82,16 @@ runs:
           for element in ${FILE_PATHS[@]}
           do
             # Validate each file path is indeed a file
-            if [ -f "$element" ]; then
+            if [ ! -f "$element" ]; then
               echo "'$element' doesn't exist or is not a file";
               exit 1;
             fi
           done
 
           ##### Determine Docker service name by resolving the placeholder
-          REPO_NAME_WITHOUT_ORGANISATION=$(echo "$REPO_NAME" | awk -F / '{print $2}')
+          REPO_NAME_WITHOUT_ORGANIZATION=$(echo "$REPO_NAME" | awk -F / '{print $2}')
           PLACEHOLDER="%s"
-          DOCKER_SERVICE=$(echo $RAW_DOCKER_SERVICE_NAME | sed "s/$PLACEHOLDER/$REPO_NAME_WITHOUT_ORGANISATION/g")
+          DOCKER_SERVICE=$(echo $RAW_DOCKER_SERVICE_NAME | sed "s/$PLACEHOLDER/$REPO_NAME_WITHOUT_ORGANIZATION/g")
 
           ##### Concat all file paths as a single argument to docker-compose
           FILE_ARGS=()
