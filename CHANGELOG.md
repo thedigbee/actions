@@ -1,3 +1,10 @@
+### [0.4.13](https://github.com/thedigbee/actions/compare/v0.4.12...v0.4.13) (2022-04-05)
+
+
+### Bug Fixes
+
+* bad condition ([0d10480](https://github.com/thedigbee/actions/commit/0d1048040f2dff973c3ca8486e81da81e5bd57c2))
+
 ### [0.4.12](https://github.com/thedigbee/actions/compare/v0.4.11...v0.4.12) (2022-04-05)
 
 
