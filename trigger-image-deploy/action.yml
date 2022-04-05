@@ -42,6 +42,12 @@ inputs:
         - <empty>
         - any valid Docker image tag (develop, master, sha:xxxxxx)
 
+  docker-compose-override-file-name:
+    description: |
+      Name of the file to be used as override for docker-compose for specifying image tags
+    default: docker-compose.local.yml
+    required: true
+
 runs:
   using: composite
   steps:
@@ -72,20 +78,37 @@ runs:
             FILE_ARGS+=(-f $TRIMMED_PATH)
           done
 
-          if [ "${{ inputs.docker-image-tag }}" == "" ]; then
-            # Pull latest image
-            sudo docker-compose ${FILE_ARGS[@]} pull $SERVICE_NAME
+          OVERRIDE_FILE="${{ inputs.docker-compose-override-file-name }}"
+          touch $OVERRIDE_FILE
+
+          DOCKER_IMAGE_TAG="${{ inputs.docker-image-tag }}"
+          if [[ $DOCKER_IMAGE_TAG == "" ]]; then
+            truncate -s 0 $OVERRIDE_FILE
           else
-            # Pull latest image based on provided tag
-            cat <<EOF | sudo docker-compose ${FILE_ARGS[@]} -f - pull $SERVICE_NAME
+            (cat > $OVERRIDE_FILE) <<EOF
               $SERVICE_NAME:
-                image: ${{ inputs.docker-image-tag }}
+                image: ghcr.io/$REPOSITORY_NAME:$DOCKER_IMAGE_TAG
             EOF
-          fi
+          fi;
+
+          FILE_ARGS+=(-f $OVERRIDE_FILE)
+
+          #XXXXXXXXXXXXXXXXXXXXXXX
+          #XXXXXXXXXXXXXXXXXXXXXXX
+          #XXXXXXXXXXXXXXXXXXXXXXX
+          #XXXXXXXXXXXXXXXXXXXXXXX
+          cat $OVERRIDE_FILE
+          #XXXXXXXXXXXXXXXXXXXXXXX
+          #XXXXXXXXXXXXXXXXXXXXXXX
+          #XXXXXXXXXXXXXXXXXXXXXXX
+          #XXXXXXXXXXXXXXXXXXXXXXX
+
+          # Pull latest image
+          sudo docker-compose ${FILE_ARGS[@]} pull $SERVICE_NAME
 
           # Recreate service container
           COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
-            sudo docker-compose ${FILE_ARGS[@]} up --build --force-recreate -d --remove-orphans $SERVICE_NAME
+              sudo docker-compose ${FILE_ARGS[@]} up --build --force-recreate -d --remove-orphans $SERVICE_NAME
 
           # Log image & container state
           sudo docker container ls
