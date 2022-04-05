@@ -117,7 +117,7 @@ runs:
           fi
 
           ##### Specify image tag in override file
-          yq e -i ".services.$DOCKER_SERVICE.image = \"$DOCKER_IMAGE_TAG\"" $OVERRIDE_FILE
+          yq e -i ".services.$DOCKER_SERVICE.image = \"ghcr.io/$REPO_NAME:$DOCKER_IMAGE_TAG\"" $OVERRIDE_FILE
 
           ##### Append override file to docker-compose file args
           FILE_ARGS+=(-f $OVERRIDE_FILE)
