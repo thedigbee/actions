@@ -1,3 +1,10 @@
+### [0.4.11](https://github.com/thedigbee/actions/compare/v0.4.10...v0.4.11) (2022-04-05)
+
+
+### Bug Fixes
+
+* don't do any replacement if DOCKER_IMAGE_TAG is empty ([aa2d65b](https://github.com/thedigbee/actions/commit/aa2d65b4fefa72e54b9eff92ec4997de88d650be))
+
 ### [0.4.10](https://github.com/thedigbee/actions/compare/v0.4.9...v0.4.10) (2022-04-05)
 
 
