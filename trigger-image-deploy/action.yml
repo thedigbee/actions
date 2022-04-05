@@ -83,8 +83,9 @@ runs:
           DOCKER_IMAGE_TAG="${{ inputs.docker-image-tag }}"
           truncate -s 0 $OVERRIDE_FILE
           if [[ $DOCKER_IMAGE_TAG != "" ]]; then
-            echo "$SERVICE_NAME:" >> $OVERRIDE_FILE
-            echo -e "\timage: ghcr.io/$REPOSITORY_NAME:$DOCKER_IMAGE_TAG" >> $OVERRIDE_FILE
+            echo "services:" >> $OVERRIDE_FILE
+            echo -e "\t$SERVICE_NAME:" >> $OVERRIDE_FILE
+            echo -e "\t\timage: ghcr.io/$REPOSITORY_NAME:$DOCKER_IMAGE_TAG" >> $OVERRIDE_FILE
           fi;
           FILE_ARGS+=(-f $OVERRIDE_FILE)
 
