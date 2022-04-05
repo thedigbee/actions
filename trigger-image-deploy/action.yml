@@ -45,7 +45,7 @@ inputs:
   docker-compose-override-file-name:
     description: |
       Name of the file to be used as override for docker-compose for specifying image tags
-    default: docker-compose.local.yml
+    default: docker-compose.remote.yml
     required: true
 
 runs:
@@ -59,18 +59,41 @@ runs:
         KEY: ${{ inputs.ssh-key }}
         command_timeout: ${{ inputs.ssh-command-timeout }}
         script: |
-          REPOSITORY_NAME="${{ github.repository }}"
-          REPOSITORY_NAME=$(echo "$REPOSITORY_NAME" | awk -F / '{print $2}')
+          ##### Action inputs are variables for more clarity and cleanliness
+          REPO_NAME="${{ github.repository }}"
+          OVERRIDE_FILE="${{ inputs.docker-compose-override-file-name }}"
+          RAW_DOCKER_SERVICE_NAME="${{ inputs.docker-service-name }}"
+          DOCKER_COMPOSE_PATH="${{ inputs.docker-compose-path }}"
 
-          # Determine Docker service name by resolving the placeholder
-          PLACEHOLDER="%s"
-          SERVICE_NAME=$(echo "${{ inputs.docker-service-name }}" | sed "s/$PLACEHOLDER/$REPOSITORY_NAME/g")
+          ##### Abort script with error code if any of the commands in the script fail
+          # https://stackoverflow.com/a/1379904
+          set -e
 
+          ##### Input validation: OVERRIDE_FILE
+          if [ -f "$OVERRIDE_FILE" ]; then
+            echo "'$OVERRIDE_FILE' doesn't exist or is not a file";
+            exit 1;
+          fi
+
+          ##### Input validation: DOCKER_COMPOSE_PATH
           # Split docker-compose file paths by comma
           # https://stackoverflow.com/questions/10586153/how-to-split-a-string-into-an-array-in-bash
-          IFS=',' read -r -a FILE_PATHS <<< "${{ inputs.docker-compose-path }}"
+          IFS=',' read -r -a FILE_PATHS <<< $DOCKER_COMPOSE_PATH
+          for element in ${FILE_PATHS[@]}
+          do
+            # Validate each file path is indeed a file
+            if [ -f "$element" ]; then
+              echo "'$element' doesn't exist or is not a file";
+              exit 1;
+            fi
+          done
 
-          # Concat all file paths as a single argument to docker-compose
+          ##### Determine Docker service name by resolving the placeholder
+          REPO_NAME_WITHOUT_ORGANISATION=$(echo "$REPO_NAME" | awk -F / '{print $2}')
+          PLACEHOLDER="%s"
+          DOCKER_SERVICE=$(echo $RAW_DOCKER_SERVICE_NAME | sed "s/$PLACEHOLDER/$REPO_NAME_WITHOUT_ORGANISATION/g")
+
+          ##### Concat all file paths as a single argument to docker-compose
           FILE_ARGS=()
           for element in ${FILE_PATHS[@]}
           do
@@ -78,34 +101,34 @@ runs:
             FILE_ARGS+=(-f $TRIMMED_PATH)
           done
 
-          OVERRIDE_FILE="${{ inputs.docker-compose-override-file-name }}"
-          touch $OVERRIDE_FILE
-          DOCKER_IMAGE_TAG="${{ inputs.docker-image-tag }}"
-          truncate -s 0 $OVERRIDE_FILE
-          if [[ $DOCKER_IMAGE_TAG != "" ]]; then
-            echo "services:" >> $OVERRIDE_FILE
-            echo -e "\t$SERVICE_NAME:" >> $OVERRIDE_FILE
-            echo -e "\t\timage: ghcr.io/$REPOSITORY_NAME:$DOCKER_IMAGE_TAG" >> $OVERRIDE_FILE
-          fi;
+          ##### Make sure "yq" package is installed first.
+          YQ_PACKAGE=yq
+          which $YQ_PACKAGE &> /dev/null
+          if [ ! $? -eq 0 ]; then
+            echo "Installing '$YQ_PACKAGE' (apt-get)..."
+            sudo apt-get install $YQ_PACKAGE &> /dev/null
+            if [ $? -eq 0 ]; then
+              echo "Successfully installed '$YQ_PACKAGE' (apt-get)."
+            else
+              echo "Package '$YQ_PACKAGE' not found (apt-get). Installing '$YQ_PACKAGE' (snap)..."
+              sudo snap install $YQ_PACKAGE &> /dev/null || exit 0
+              echo "Successfully installed '$YQ_PACKAGE' (snap)."
+            fi
+          fi
+
+          ##### Specify image tag in override file
+          yq e -i ".services.$DOCKER_SERVICE.image = \"$DOCKER_IMAGE_TAG\"" $OVERRIDE_FILE
+
+          ##### Append override file to docker-compose file args
           FILE_ARGS+=(-f $OVERRIDE_FILE)
 
-          #XXXXXXXXXXXXXXXXXXXXXXX
-          #XXXXXXXXXXXXXXXXXXXXXXX
-          #XXXXXXXXXXXXXXXXXXXXXXX
-          #XXXXXXXXXXXXXXXXXXXXXXX
-          cat $OVERRIDE_FILE
-          #XXXXXXXXXXXXXXXXXXXXXXX
-          #XXXXXXXXXXXXXXXXXXXXXXX
-          #XXXXXXXXXXXXXXXXXXXXXXX
-          #XXXXXXXXXXXXXXXXXXXXXXX
+          ##### Pull latest image
+          sudo docker-compose ${FILE_ARGS[@]} pull $DOCKER_SERVICE
 
-          # Pull latest image
-          sudo docker-compose ${FILE_ARGS[@]} pull $SERVICE_NAME
-
-          # Recreate service container
+          ##### Recreate service container
           COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
-              sudo docker-compose ${FILE_ARGS[@]} up --build --force-recreate -d --remove-orphans $SERVICE_NAME
+              sudo docker-compose ${FILE_ARGS[@]} up --build --force-recreate -d --remove-orphans $DOCKER_SERVICE
 
-          # Log image & container state
+          ##### Log image & container state
           sudo docker container ls
           sudo docker image ls
