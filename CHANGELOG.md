@@ -1,3 +1,10 @@
+### [0.4.10](https://github.com/thedigbee/actions/compare/v0.4.9...v0.4.10) (2022-04-05)
+
+
+### Bug Fixes
+
+* remove useless Docker logging commands ([864e191](https://github.com/thedigbee/actions/commit/864e191dfdd73b6203765709cedd8e640921fd4d))
+
 ### [0.4.9](https://github.com/thedigbee/actions/compare/v0.4.8...v0.4.9) (2022-04-05)
 
 
