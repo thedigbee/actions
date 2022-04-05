@@ -78,25 +78,23 @@ runs:
             FILE_ARGS+=(-f $TRIMMED_PATH)
           done
 
-          OVERRIDE_FILE="${{ inputs.docker-compose-override-file-name }}"
-          touch $OVERRIDE_FILE
-
-          DOCKER_IMAGE_TAG="${{ inputs.docker-image-tag }}"
-          if [[ $DOCKER_IMAGE_TAG == "" ]]; then
-            truncate -s 0 $OVERRIDE_FILE
-          else
-            (cat > $OVERRIDE_FILE) <<EOF
-              $SERVICE_NAME:
-                image: ghcr.io/$REPOSITORY_NAME:$DOCKER_IMAGE_TAG<<-EOF
-          fi;
-
-          FILE_ARGS+=(-f $OVERRIDE_FILE)
+          # OVERRIDE_FILE="${{ inputs.docker-compose-override-file-name }}"
+          # touch $OVERRIDE_FILE
+          # DOCKER_IMAGE_TAG="${{ inputs.docker-image-tag }}"
+          # if [[ $DOCKER_IMAGE_TAG == "" ]]; then
+          #   truncate -s 0 $OVERRIDE_FILE
+          # else
+          #   (cat > $OVERRIDE_FILE) <<EOF
+          #     $SERVICE_NAME:
+          #       image: ghcr.io/$REPOSITORY_NAME:$DOCKER_IMAGE_TAG<<-EOF
+          # fi;
+          # FILE_ARGS+=(-f $OVERRIDE_FILE)
 
           #XXXXXXXXXXXXXXXXXXXXXXX
           #XXXXXXXXXXXXXXXXXXXXXXX
           #XXXXXXXXXXXXXXXXXXXXXXX
           #XXXXXXXXXXXXXXXXXXXXXXX
-          cat $OVERRIDE_FILE
+          # cat $OVERRIDE_FILE
           #XXXXXXXXXXXXXXXXXXXXXXX
           #XXXXXXXXXXXXXXXXXXXXXXX
           #XXXXXXXXXXXXXXXXXXXXXXX
