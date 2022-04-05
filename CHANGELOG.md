@@ -1,3 +1,10 @@
+### [0.4.5](https://github.com/thedigbee/actions/compare/v0.4.4...v0.4.5) (2022-04-05)
+
+
+### Bug Fixes
+
+* uncomment tag logic, use echo instead of heredoc due to YAML limitations ([fd9b7d7](https://github.com/thedigbee/actions/commit/fd9b7d73625f6853daabf9f45d02dc6ca113f811))
+
 ### [0.4.4](https://github.com/thedigbee/actions/compare/v0.4.3...v0.4.4) (2022-04-05)
 
 
