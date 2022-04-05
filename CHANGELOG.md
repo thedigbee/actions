@@ -1,3 +1,10 @@
+### [0.4.2](https://github.com/thedigbee/actions/compare/v0.4.1...v0.4.2) (2022-04-05)
+
+
+### Bug Fixes
+
+* override image tag logic in trigger-image-deploy ([8911d59](https://github.com/thedigbee/actions/commit/8911d59413e6b20cabe17fd97c7b9fff08cc3635))
+
 ### [0.4.1](https://github.com/thedigbee/actions/compare/v0.4.0...v0.4.1) (2022-04-04)
 
 
