@@ -87,8 +87,7 @@ runs:
           else
             (cat > $OVERRIDE_FILE) <<EOF
               $SERVICE_NAME:
-                image: ghcr.io/$REPOSITORY_NAME:$DOCKER_IMAGE_TAG
-            EOF
+                image: ghcr.io/$REPOSITORY_NAME:$DOCKER_IMAGE_TAG<<-EOF
           fi;
 
           FILE_ARGS+=(-f $OVERRIDE_FILE)
