@@ -1,3 +1,10 @@
+### [0.4.3](https://github.com/thedigbee/actions/compare/v0.4.2...v0.4.3) (2022-04-05)
+
+
+### Bug Fixes
+
+* use <<-EOF because of indent issues ([8afcf4e](https://github.com/thedigbee/actions/commit/8afcf4e0840b3db9b2c11d094f61406e25a4a3c0))
+
 ### [0.4.2](https://github.com/thedigbee/actions/compare/v0.4.1...v0.4.2) (2022-04-05)
 
 
