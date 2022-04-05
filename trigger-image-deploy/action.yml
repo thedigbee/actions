@@ -128,7 +128,3 @@ runs:
           ##### Recreate service container
           COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
               sudo docker-compose ${FILE_ARGS[@]} up --build --force-recreate -d --remove-orphans $DOCKER_SERVICE
-
-          ##### Log image & container state
-          sudo docker container ls
-          sudo docker image ls
