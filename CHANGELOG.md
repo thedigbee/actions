@@ -1,3 +1,10 @@
+### [0.4.4](https://github.com/thedigbee/actions/compare/v0.4.3...v0.4.4) (2022-04-05)
+
+
+### Bug Fixes
+
+* comment out docker-image-tag feature from trigger-image-deploy ([320cc40](https://github.com/thedigbee/actions/commit/320cc40ec11f3d2bf1ae0ed695f0f24be5201d20))
+
 ### [0.4.3](https://github.com/thedigbee/actions/compare/v0.4.2...v0.4.3) (2022-04-05)
 
 
