@@ -34,6 +34,12 @@ inputs:
     required: true
     default: docker-compose.yml
 
+  docker-compose-path-override:
+    description: |
+      Path to the file to be used to specify Docker image tags
+    default: docker-compose.remote.yml
+    required: true
+
   docker-image-tag:
     description: |
       Docker image tag. Leave empty to pull latest image as specified in docker-compose
@@ -41,12 +47,6 @@ inputs:
       Accepted values:
         - <empty>
         - any valid Docker image tag (develop, master, sha:xxxxxx)
-
-  docker-compose-override-file-name:
-    description: |
-      Name of the file to be used as override for docker-compose for specifying image tags
-    default: docker-compose.remote.yml
-    required: true
 
 runs:
   using: composite
@@ -61,7 +61,7 @@ runs:
         script: |
           ##### Action inputs are variables for more clarity and cleanliness
           REPO_NAME="${{ github.repository }}"
-          OVERRIDE_FILE="${{ inputs.docker-compose-override-file-name }}"
+          OVERRIDE_FILE="${{ inputs.docker-compose-path-override }}"
           RAW_DOCKER_SERVICE_NAME="${{ inputs.docker-service-name }}"
           DOCKER_COMPOSE_PATH="${{ inputs.docker-compose-path }}"
 
