@@ -64,6 +64,7 @@ runs:
           OVERRIDE_FILE="${{ inputs.docker-compose-path-override }}"
           RAW_DOCKER_SERVICE_NAME="${{ inputs.docker-service-name }}"
           DOCKER_COMPOSE_PATH="${{ inputs.docker-compose-path }}"
+          DOCKER_IMAGE_TAG="${{ inputs.docker-image-tag }}"
 
           ##### Abort script with error code if any of the commands in the script fail
           # https://stackoverflow.com/a/1379904
