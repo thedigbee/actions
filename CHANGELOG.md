@@ -1,3 +1,10 @@
+### [0.4.8](https://github.com/thedigbee/actions/compare/v0.4.7...v0.4.8) (2022-04-05)
+
+
+### Bug Fixes
+
+* bad 'file exists' condition PLUS organization spelling ([4ce43d1](https://github.com/thedigbee/actions/commit/4ce43d1a7483b60cbe8b19789a1a50cc42406de5))
+
 ### [0.4.7](https://github.com/thedigbee/actions/compare/v0.4.6...v0.4.7) (2022-04-05)
 
 
