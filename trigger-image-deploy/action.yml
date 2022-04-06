@@ -31,9 +31,6 @@ inputs:
     description: |
       Name of the Docker service to be restarted (after pulling its image).
       Use '%s' as a placeholder for the repository name.
-      Pass 'all' to restart all current services. This will ignore both 'docker-image-tag' and
-      'docker-compose-path-override' and instead it will restart all services taking only into
-      account the paths in 'docker-compose-path'.
     required: true
     default: digbee-%s
 
@@ -73,7 +70,7 @@ runs:
           set -e
 
           ##### Input validation: OVERRIDE_FILE
-          if [[ -n "$OVERRIDE_FILE" && ! -f "$OVERRIDE_FILE" ]]; then
+          if [[ ! -f "$OVERRIDE_FILE" ]]; then
             echo "'$OVERRIDE_FILE' doesn't exist or is not a file";
             exit 1;
           fi
@@ -119,28 +116,19 @@ runs:
             fi
           fi
 
-          ##### If DOCKER_SERVICE is 'all', clear variable out so that it doesn't cause
-          ##### the docker-compose commands to run only for a specific service.
-          if [ $DOCKER_SERVICE == 'all' ]; then
-            DOCKER_SERVICE=
+          ##### If image tag is defined, set it in the override file.
+          if [ -n "$DOCKER_IMAGE_TAG" ]; then
+            yq e -i ".services.$DOCKER_SERVICE.image = \"ghcr.io/$REPO_NAME:$DOCKER_IMAGE_TAG\"" $OVERRIDE_FILE
 
-          ##### If DOCKER_SERVICE is an actual Docker service and OVERRIDE_FILE is defined,
-          ##### proceed with substitutions
-          elif [ -n "$OVERRIDE_FILE" ]; then
-            ##### If image tag is defined, set it in the override file.
-            if [ -n "$DOCKER_IMAGE_TAG" ]; then
-              yq e -i ".services.$DOCKER_SERVICE.image = \"ghcr.io/$REPO_NAME:$DOCKER_IMAGE_TAG\"" $OVERRIDE_FILE
-
-            ##### If image tag is not defined, delete the "image" property.
-            ##### This is done so that an empty DOCKER_IMAGE_TAG has the effect of preserving
-            ##### the definitions in the ancestor docker-compose files
-            else
-              yq e -i "del(.services.$DOCKER_SERVICE.image)" $OVERRIDE_FILE
-            fi
-
-            ##### Append override file to docker-compose file args
-            FILE_ARGS+=(-f $OVERRIDE_FILE)
+          ##### If image tag is not defined, delete the "image" property.
+          ##### This is done so that an empty DOCKER_IMAGE_TAG has the effect of preserving
+          ##### the definitions in the ancestor docker-compose files
+          else
+            yq e -i "del(.services.$DOCKER_SERVICE.image)" $OVERRIDE_FILE
           fi
+
+          ##### Append override file to docker-compose file args
+          FILE_ARGS+=(-f $OVERRIDE_FILE)
 
           ##### Pull latest image
           sudo docker-compose "${FILE_ARGS[@]}" pull $DOCKER_SERVICE
