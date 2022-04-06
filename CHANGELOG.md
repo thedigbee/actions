@@ -1,3 +1,10 @@
+## [0.5.0](https://github.com/thedigbee/actions/compare/v0.4.14...v0.5.0) (2022-04-06)
+
+
+### New Features
+
+* support 'all' as value for docker-service-name ([066b4b4](https://github.com/thedigbee/actions/commit/066b4b40efb9cf6dae49d3080067761af77586a1))
+
 ### [0.4.14](https://github.com/thedigbee/actions/compare/v0.4.13...v0.4.14) (2022-04-05)
 
 
