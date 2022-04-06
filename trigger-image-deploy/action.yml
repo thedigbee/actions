@@ -73,7 +73,7 @@ runs:
           set -e
 
           ##### Input validation: OVERRIDE_FILE
-          if [ -n "$OVERRIDE_FILE" ]; && [ ! -f "$OVERRIDE_FILE" ]; then
+          if [[ -n "$OVERRIDE_FILE" && ! -f "$OVERRIDE_FILE" ]]; then
             echo "'$OVERRIDE_FILE' doesn't exist or is not a file";
             exit 1;
           fi
@@ -98,7 +98,7 @@ runs:
 
           ##### Concat all file paths as a single argument to docker-compose
           FILE_ARGS=()
-          for element in ${FILE_PATHS[@]}
+          for element in "${FILE_PATHS[@]}"
           do
             TRIMMED_PATH=$(echo $element | xargs)
             FILE_ARGS+=(-f $TRIMMED_PATH)
@@ -122,7 +122,7 @@ runs:
           ##### If DOCKER_SERVICE is 'all', clear variable out so that it doesn't cause
           ##### the docker-compose commands to run only for a specific service.
           if [ $DOCKER_SERVICE == 'all' ]; then
-            $DOCKER_SERVICE=
+            DOCKER_SERVICE=
 
           ##### If DOCKER_SERVICE is an actual Docker service and OVERRIDE_FILE is defined,
           ##### proceed with substitutions
@@ -143,8 +143,8 @@ runs:
           fi
 
           ##### Pull latest image
-          sudo docker-compose ${FILE_ARGS[@]} pull $DOCKER_SERVICE
+          sudo docker-compose "${FILE_ARGS[@]}" pull $DOCKER_SERVICE
 
           ##### Recreate service container
           COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
-              sudo docker-compose ${FILE_ARGS[@]} up --build --force-recreate -d --remove-orphans $DOCKER_SERVICE
+              sudo docker-compose "${FILE_ARGS[@]}" up --build --force-recreate -d --remove-orphans $DOCKER_SERVICE
