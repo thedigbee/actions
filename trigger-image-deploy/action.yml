@@ -20,13 +20,6 @@ inputs:
     description: Timeout for SSH command (see https://github.com/appleboy/ssh-action)
     default: 10m
 
-  docker-service-name:
-    description: |
-      Name of the Docker service to be restarted so that it takes into account the new image.
-      Use '%s' as a placeholder for the name of the repository
-    required: true
-    default: digbee-%s
-
   docker-compose-path:
     description: |
       Path to the docker-compose.yml file. Support multiple paths via comma-separation.
@@ -34,19 +27,28 @@ inputs:
     required: true
     default: docker-compose.yml
 
-  docker-compose-path-override:
+  docker-service-name:
     description: |
-      Path to the file to be used to specify Docker image tags
-    default: docker-compose.remote.yml
+      Name of the Docker service to be restarted (after pulling its image).
+      Use '%s' as a placeholder for the repository name.
+      Pass 'all' to restart all current services. This will ignore both 'docker-image-tag' and
+      'docker-compose-path-override' and instead it will restart all services taking only into
+      account the paths in 'docker-compose-path'.
     required: true
+    default: digbee-%s
 
   docker-image-tag:
     description: |
       Docker image tag. Leave empty to pull latest image as specified in docker-compose
-      files (see docker-compose-path).
+      files (see docker-compose-path). Has no effect if 'docker-compose-path-override' is empty.
       Accepted values:
         - <empty>
         - any valid Docker image tag (develop, master, sha:xxxxxx)
+
+  docker-compose-path-override:
+    description: |
+      Path to the file to be used to specify Docker image tags.
+    default: docker-compose.remote.yml
 
 runs:
   using: composite
@@ -71,7 +73,7 @@ runs:
           set -e
 
           ##### Input validation: OVERRIDE_FILE
-          if [ ! -f "$OVERRIDE_FILE" ]; then
+          if [ -n "$OVERRIDE_FILE" ]; && [ ! -f "$OVERRIDE_FILE" ]; then
             echo "'$OVERRIDE_FILE' doesn't exist or is not a file";
             exit 1;
           fi
@@ -102,28 +104,43 @@ runs:
             FILE_ARGS+=(-f $TRIMMED_PATH)
           done
 
-          if [ -n "$DOCKER_IMAGE_TAG" ]; then
-            ##### Make sure "yq" package is installed first.
-            YQ_PACKAGE=yq
-            which $YQ_PACKAGE &> /dev/null
-            if [ ! $? -eq 0 ]; then
-              echo "Installing '$YQ_PACKAGE' (apt-get)..."
-              sudo apt-get install $YQ_PACKAGE &> /dev/null
-              if [ $? -eq 0 ]; then
-                echo "Successfully installed '$YQ_PACKAGE' (apt-get)."
-              else
-                echo "Package '$YQ_PACKAGE' not found (apt-get). Installing '$YQ_PACKAGE' (snap)..."
-                sudo snap install $YQ_PACKAGE &> /dev/null || exit 0
-                echo "Successfully installed '$YQ_PACKAGE' (snap)."
-              fi
+          ##### Make sure "yq" package is installed first.
+          YQ_PACKAGE=yq
+          which $YQ_PACKAGE &> /dev/null
+          if [ ! $? -eq 0 ]; then
+            echo "Installing '$YQ_PACKAGE' (apt-get)..."
+            sudo apt-get install $YQ_PACKAGE &> /dev/null
+            if [ $? -eq 0 ]; then
+              echo "Successfully installed '$YQ_PACKAGE' (apt-get)."
+            else
+              echo "Package '$YQ_PACKAGE' not found (apt-get). Installing '$YQ_PACKAGE' (snap)..."
+              sudo snap install $YQ_PACKAGE &> /dev/null || exit 0
+              echo "Successfully installed '$YQ_PACKAGE' (snap)."
             fi
-
-            ##### Specify image tag in override file
-            yq e -i ".services.$DOCKER_SERVICE.image = \"ghcr.io/$REPO_NAME:$DOCKER_IMAGE_TAG\"" $OVERRIDE_FILE
           fi
 
-          ##### Append override file to docker-compose file args
-          FILE_ARGS+=(-f $OVERRIDE_FILE)
+          ##### If DOCKER_SERVICE is 'all', clear variable out so that it doesn't cause
+          ##### the docker-compose commands to run only for a specific service.
+          if [ $DOCKER_SERVICE == 'all' ]; then
+            $DOCKER_SERVICE=
+
+          ##### If DOCKER_SERVICE is an actual Docker service and OVERRIDE_FILE is defined,
+          ##### proceed with substitutions
+          elif [ -n "$OVERRIDE_FILE" ]; then
+            ##### If image tag is defined, set it in the override file.
+            if [ -n "$DOCKER_IMAGE_TAG" ]; then
+              yq e -i ".services.$DOCKER_SERVICE.image = \"ghcr.io/$REPO_NAME:$DOCKER_IMAGE_TAG\"" $OVERRIDE_FILE
+
+            ##### If image tag is not defined, delete the "image" property.
+            ##### This is done so that an empty DOCKER_IMAGE_TAG has the effect of preserving
+            ##### the definitions in the ancestor docker-compose files
+            else
+              yq e -i "del(.services.$DOCKER_SERVICE.image)" $OVERRIDE_FILE
+            fi
+
+            ##### Append override file to docker-compose file args
+            FILE_ARGS+=(-f $OVERRIDE_FILE)
+          fi
 
           ##### Pull latest image
           sudo docker-compose ${FILE_ARGS[@]} pull $DOCKER_SERVICE
