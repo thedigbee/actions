@@ -1,3 +1,10 @@
+### [0.5.3](https://github.com/thedigbee/actions/compare/v0.5.2...v0.5.3) (2022-04-06)
+
+
+### Bug Fixes
+
+* receive full image tag from params instead of building it from repo name + short image tag ([51bc3cd](https://github.com/thedigbee/actions/commit/51bc3cd9a6481053c917e321b39e564a41506c3a))
+
 ### [0.5.2](https://github.com/thedigbee/actions/compare/v0.5.1...v0.5.2) (2022-04-06)
 
 
