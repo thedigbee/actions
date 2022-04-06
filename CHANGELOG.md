@@ -1,3 +1,10 @@
+### [0.5.1](https://github.com/thedigbee/actions/compare/v0.5.0...v0.5.1) (2022-04-06)
+
+
+### Bug Fixes
+
+* syntactic issues ([b26673d](https://github.com/thedigbee/actions/commit/b26673d308e12e3af743ea164f69b6e21f5cdb0c))
+
 ## [0.5.0](https://github.com/thedigbee/actions/compare/v0.4.14...v0.5.0) (2022-04-06)
 
 
