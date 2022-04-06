@@ -28,11 +28,8 @@ inputs:
     default: docker-compose.yml
 
   docker-service-name:
-    description: |
-      Name of the Docker service to be restarted (after pulling its image).
-      Use '%s' as a placeholder for the repository name.
+    description: Name of the Docker service to be restarted (after pulling its image).
     required: true
-    default: digbee-%s
 
   docker-image-tag:
     description: |
@@ -59,9 +56,8 @@ runs:
         command_timeout: ${{ inputs.ssh-command-timeout }}
         script: |
           ##### Action inputs are variables for more clarity and cleanliness
-          REPO_NAME="${{ github.repository }}"
           OVERRIDE_FILE="${{ inputs.docker-compose-path-override }}"
-          RAW_DOCKER_SERVICE_NAME="${{ inputs.docker-service-name }}"
+          DOCKER_SERVICE="${{ inputs.docker-service-name }}"
           DOCKER_COMPOSE_PATH="${{ inputs.docker-compose-path }}"
           DOCKER_IMAGE_TAG="${{ inputs.docker-image-tag }}"
 
@@ -88,11 +84,6 @@ runs:
             fi
           done
 
-          ##### Determine Docker service name by resolving the placeholder
-          REPO_NAME_WITHOUT_ORGANIZATION=$(echo "$REPO_NAME" | awk -F / '{print $2}')
-          PLACEHOLDER="%s"
-          DOCKER_SERVICE=$(echo $RAW_DOCKER_SERVICE_NAME | sed "s/$PLACEHOLDER/$REPO_NAME_WITHOUT_ORGANIZATION/g")
-
           ##### Concat all file paths as a single argument to docker-compose
           FILE_ARGS=()
           for element in "${FILE_PATHS[@]}"
@@ -118,7 +109,7 @@ runs:
 
           ##### If image tag is defined, set it in the override file.
           if [ -n "$DOCKER_IMAGE_TAG" ]; then
-            yq e -i ".services.$DOCKER_SERVICE.image = \"ghcr.io/$REPO_NAME:$DOCKER_IMAGE_TAG\"" $OVERRIDE_FILE
+            yq e -i ".services.$DOCKER_SERVICE.image = \"$DOCKER_IMAGE_TAG\"" $OVERRIDE_FILE
 
           ##### If image tag is not defined, delete the "image" property.
           ##### This is done so that an empty DOCKER_IMAGE_TAG has the effect of preserving
