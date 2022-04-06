@@ -1,3 +1,10 @@
+### [0.5.2](https://github.com/thedigbee/actions/compare/v0.5.1...v0.5.2) (2022-04-06)
+
+
+### Bug Fixes
+
+* remove 'all' keyword for simplicity of the script ([fba9a1b](https://github.com/thedigbee/actions/commit/fba9a1b6b4219063f6ef94f645f93173534acf09))
+
 ### [0.5.1](https://github.com/thedigbee/actions/compare/v0.5.0...v0.5.1) (2022-04-06)
 
 
