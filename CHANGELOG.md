@@ -1,3 +1,10 @@
+### [0.6.1](https://github.com/thedigbee/actions/compare/v0.6.0...v0.6.1) (2022-07-06)
+
+
+### Bug Fixes
+
+* remove no longer used input ([fc98fa5](https://github.com/thedigbee/actions/commit/fc98fa51e8722e8138fd7cbba1547572df7fd6e4))
+
 ## [0.6.0](https://github.com/thedigbee/actions/compare/v0.5.3...v0.6.0) (2022-07-06)
 
 
