@@ -1,6 +1,6 @@
 {
   "name": "actions",
-  "version": "0.5.3",
+  "version": "0.5.4-beta-feat-add-restart-service-job.0",
   "description": "Github actions repo for the Digbee ecosystem",
   "main": "index.js",
   "scripts": {
