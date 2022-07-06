@@ -1,0 +1,99 @@
+name: restart-service
+
+description: |
+  Restarts a given service container
+
+inputs:
+  ssh-server:
+    description: SSH server IP where docker-compose is running
+    required: true
+
+  ssh-user:
+    description: SSH username
+    required: true
+
+  ssh-key:
+    description: SSH private key
+    required: true
+
+  ssh-command-timeout:
+    description: Timeout for SSH command (see https://github.com/appleboy/ssh-action)
+    default: 10m
+
+  docker-compose-path:
+    description: |
+      Path to the docker-compose.yml file. Support multiple paths via comma-separation.
+      DO NOT use the "~" shortcut.
+    required: true
+    default: docker-compose.yml
+
+  docker-service-name:
+    description: Name of the Docker service to be restarted
+    required: true
+
+  docker-image-tag:
+    description: |
+      Docker image tag. Leave empty to pull latest image as specified in docker-compose
+      files (see docker-compose-path). Has no effect if 'docker-compose-path-override' is empty.
+      Accepted values:
+        - <empty>
+        - any valid Docker image tag (develop, master, sha:xxxxxx)
+
+  docker-compose-path-override:
+    description: |
+      Path to the file to be used to specify Docker image tags.
+    default: docker-compose.remote.yml
+
+runs:
+  using: composite
+  steps:
+    - name: Execute commands on SSH host
+      uses: appleboy/ssh-action@master
+      with:
+        HOST: ${{ inputs.ssh-server }}
+        USERNAME: ${{ inputs.ssh-user }}
+        KEY: ${{ inputs.ssh-key }}
+        command_timeout: ${{ inputs.ssh-command-timeout }}
+        script: |
+          ##### Action inputs are variables for more clarity and cleanliness
+          OVERRIDE_FILE="${{ inputs.docker-compose-path-override }}"
+          DOCKER_SERVICE="${{ inputs.docker-service-name }}"
+          DOCKER_COMPOSE_PATH="${{ inputs.docker-compose-path }}"
+          DOCKER_IMAGE_TAG="${{ inputs.docker-image-tag }}"
+
+          ##### Abort script with error code if any of the commands in the script fail
+          # https://stackoverflow.com/a/1379904
+          set -e
+
+          ##### Input validation: OVERRIDE_FILE
+          if [[ ! -f "$OVERRIDE_FILE" ]]; then
+            echo "'$OVERRIDE_FILE' doesn't exist or is not a file";
+            exit 1;
+          fi
+
+          ##### Input validation: DOCKER_COMPOSE_PATH
+          # Split docker-compose file paths by comma
+          # https://stackoverflow.com/questions/10586153/how-to-split-a-string-into-an-array-in-bash
+          IFS=',' read -r -a FILE_PATHS <<< $DOCKER_COMPOSE_PATH
+          for element in ${FILE_PATHS[@]}
+          do
+            # Validate each file path is indeed a file
+            if [ ! -f "$element" ]; then
+              echo "'$element' doesn't exist or is not a file";
+              exit 1;
+            fi
+          done
+
+          ##### Concat all file paths as a single argument to docker-compose
+          FILE_ARGS=()
+          for element in "${FILE_PATHS[@]}"
+          do
+            TRIMMED_PATH=$(echo $element | xargs)
+            FILE_ARGS+=(-f $TRIMMED_PATH)
+          done
+
+          ##### Append override file to docker-compose file args
+          FILE_ARGS+=(-f $OVERRIDE_FILE)
+
+          ##### Restart the service
+          docker-compose "${FILE_ARGS[@]}" restart $DOCKER_SERVICE
