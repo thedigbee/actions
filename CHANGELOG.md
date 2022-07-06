@@ -1,3 +1,10 @@
+## [0.6.0](https://github.com/thedigbee/actions/compare/v0.5.3...v0.6.0) (2022-07-06)
+
+
+### New Features
+
+* add job to restart a given service ([bb6aae7](https://github.com/thedigbee/actions/commit/bb6aae7e7713aaf1392ddb5e1f8647b8c13ae163))
+
 ### [0.5.3](https://github.com/thedigbee/actions/compare/v0.5.2...v0.5.3) (2022-04-06)
 
 
